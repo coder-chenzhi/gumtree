@@ -93,6 +93,9 @@ public class Run {
         Options opts = new Options();
         args = Option.processCommandLine(args, opts);
 
+        args = new String[]{"webdiff",
+                "E:\\Code\\GumTreeSpace\\gumtree\\client\\src\\main\\resources\\testdata\\src_big_change\\LinesOfCodeCalculator3.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\client\\src\\main\\resources\\testdata\\src_big_change\\LinesOfCodeCalculator4.java"};
         initClients();
 
         Registry.Factory<? extends Client> client;

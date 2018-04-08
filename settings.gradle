@@ -17,3 +17,5 @@ include 'benchmark',
         'gen.python',
         'gen.ruby',
         'gen.srcml'
+include 'demo'
+
