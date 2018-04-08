@@ -39,8 +39,9 @@ public class Run {
 
                         @Override
                         protected void process(String name, String[] args) {
-                            String key = args[0].startsWith("gumtree.") ? args[0] : "gumtree." + args[0];
+                            String key = args[0].startsWith("gt.") ? args[0] : "gt." + args[0];
                             System.setProperty(key, args[1]);
+
                         }
                     },
                     new Option.Verbose(),
@@ -91,11 +92,16 @@ public class Run {
 
     public static void main(String[] args) {
         Options opts = new Options();
+
+        if(args.length == 0) {
+            args = new String[]{"-c", "gt.bum.smt", "1.0", "-c", "gt.stm.mh", "1", "-c", "webdiff.port", "8090", "webdiff",
+                    "E:\\Code\\GumTreeSpace\\gumtree\\client\\src\\main\\resources\\testdata\\src_big_change\\LinesOfCodeCalculator3.java",
+                    "E:\\Code\\GumTreeSpace\\gumtree\\client\\src\\main\\resources\\testdata\\src_big_change\\LinesOfCodeCalculator4.java"};
+
+        }
+
         args = Option.processCommandLine(args, opts);
 
-        args = new String[]{"webdiff",
-                "E:\\Code\\GumTreeSpace\\gumtree\\client\\src\\main\\resources\\testdata\\src_big_change\\LinesOfCodeCalculator3.java",
-                "E:\\Code\\GumTreeSpace\\gumtree\\client\\src\\main\\resources\\testdata\\src_big_change\\LinesOfCodeCalculator4.java"};
         initClients();
 
         Registry.Factory<? extends Client> client;
