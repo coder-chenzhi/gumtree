@@ -1,4 +1,11 @@
-# GumTree ![Build Status](https://travis-ci.org/GumTreeDiff/gumtree.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/GumTreeDiff/gumtree/badge.svg?branch=master)](https://coveralls.io/r/GumTreeDiff/gumtree?branch=master)
+# GumTree
+
+## Status
+
+* Master branch: ![Build Status](https://travis-ci.org/GumTreeDiff/gumtree.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/GumTreeDiff/gumtree/badge.svg?branch=master)](https://coveralls.io/github/GumTreeDiff/gumtree?branch=master)
+* Develop branch: ![Build Status](https://travis-ci.org/GumTreeDiff/gumtree.svg?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/GumTreeDiff/gumtree/badge.svg?branch=develop)](https://coveralls.io/github/GumTreeDiff/gumtree?branch=develop)
+
+## Description
 
 GumTree is a complete framework to deal with source code as trees and compute differences between them. It includes possibilities such as:
 * converting a source file into a language-agnostic tree format
@@ -37,7 +44,3 @@ We are researchers, therefore if you use GumTree in an academic work we would be
 ## Documentation
 
 To use GumTree, you can start by consulting the [Getting Started](https://github.com/GumTreeDiff/gumtree/wiki/Getting-Started) page from our [wiki](https://github.com/GumTreeDiff/gumtree/wiki).
-
-## Nightlies
-
-You can find the latest binaries of GumTree on [Bintray](https://bintray.com/jrfaller/GumTree/nightlies/2.1.0-2017-2#files).

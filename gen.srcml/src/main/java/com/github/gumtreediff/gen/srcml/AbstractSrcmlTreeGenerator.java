@@ -29,11 +29,14 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.*;
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public abstract class AbstractSrcmlTreeGenerator extends TreeGenerator {
 
-    private static final String SRCML_CMD = System.getProperty("gumtree.srcml.path", "srcml");
+    private static final String SRCML_CMD = System.getProperty("gt.srcml.path", "srcml");
 
     private static final QName LINE = new  QName("http://www.srcML.org/srcML/position", "line", "pos");
 
@@ -44,7 +47,7 @@ public abstract class AbstractSrcmlTreeGenerator extends TreeGenerator {
     private Set<String> labeled = new HashSet<String>(
             Arrays.asList("specifier", "name", "comment", "literal", "operator"));
 
-    private StringBuffer currentLabel;
+    private StringBuilder currentLabel;
 
     private TreeContext context;
 
@@ -58,9 +61,9 @@ public abstract class AbstractSrcmlTreeGenerator extends TreeGenerator {
     public TreeContext getTreeContext(String xml) {
         XMLInputFactory fact = XMLInputFactory.newInstance();
         context = new TreeContext();
-        currentLabel = new StringBuffer();
+        currentLabel = new StringBuilder();
         try {
-            Stack<ITree> trees = new Stack<>();
+            ArrayDeque<ITree> trees = new ArrayDeque<>();
             XMLEventReader r = fact.createXMLEventReader(new StringReader(xml));
             while (r.hasNext()) {
                 XMLEvent ev = r.nextEvent();
@@ -68,7 +71,7 @@ public abstract class AbstractSrcmlTreeGenerator extends TreeGenerator {
                     StartElement s = ev.asStartElement();
                     String typeLabel = s.getName().getLocalPart();
                     if (typeLabel.equals("position"))
-                        setLength(trees.peek(), s);
+                        setLength(trees.peekFirst(), s);
                     else {
                         int type = typeLabel.hashCode();
                         ITree t = context.createTree(type, "", typeLabel);
@@ -77,18 +80,18 @@ public abstract class AbstractSrcmlTreeGenerator extends TreeGenerator {
                             context.setRoot(t);
                             t.setPos(0);
                         } else {
-                            t.setParentAndUpdateChildren(trees.peek());
+                            t.setParentAndUpdateChildren(trees.peekFirst());
                             setPos(t, s);
                         }
-                        trees.push(t);
+                        trees.addFirst(t);
                     }
                 } else if (ev.isEndElement()) {
                     EndElement end = ev.asEndElement();
                     if (!end.getName().getLocalPart().equals("position")) {
                         if (isLabeled(trees))
-                            trees.peek().setLabel(currentLabel.toString());
-                        trees.pop();
-                        currentLabel = new StringBuffer();
+                            trees.peekFirst().setLabel(currentLabel.toString());
+                        trees.removeFirst();
+                        currentLabel = new StringBuilder();
                     }
                 } else if (ev.isCharacters()) {
                     Characters chars = ev.asCharacters();
@@ -105,8 +108,8 @@ public abstract class AbstractSrcmlTreeGenerator extends TreeGenerator {
         return null;
     }
 
-    private boolean isLabeled(Stack<ITree> trees) {
-        return labeled.contains(context.getTypeLabel(trees.peek().getType()));
+    private boolean isLabeled(ArrayDeque<ITree> trees) {
+        return labeled.contains(context.getTypeLabel(trees.peekFirst().getType()));
     }
 
     private void fixPos(TreeContext ctx) {
@@ -147,28 +150,27 @@ public abstract class AbstractSrcmlTreeGenerator extends TreeGenerator {
     public String getXml(Reader r) throws IOException {
         //FIXME this is not efficient but I am not sure how to speed up things here.
         File f = File.createTempFile("gumtree", "");
-        FileWriter w = new FileWriter(f);
-        BufferedReader br = new BufferedReader(r);
-        String line = br.readLine();
-        while (line != null) {
-            w.append(line);
-            w.append(System.lineSeparator());
-            line = br.readLine();
+        try (
+                Writer w = Files.newBufferedWriter(f.toPath(), Charset.forName("UTF-8"));
+                BufferedReader br = new BufferedReader(r);
+        ) {
+            String line = br.readLine();
+            while (line != null) {
+                w.append(line + System.lineSeparator());
+                line = br.readLine();
+            }
         }
-        w.close();
-        br.close();
         ProcessBuilder b = new ProcessBuilder(getArguments(f.getAbsolutePath()));
         b.directory(f.getParentFile());
-        try {
-            Process p = b.start();
-            StringBuffer buf = new StringBuffer();
-            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        Process p = b.start();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));) {
+            StringBuilder buf = new StringBuilder();
             // TODO Why do we need to read and bufferize everything, when we could/should only use generateFromStream
-            line = null;
+            String line = null;
             while ((line = br.readLine()) != null)
-                buf.append(line + "\n");
+                buf.append(line + System.lineSeparator());
             p.waitFor();
-            if (p.exitValue() != 0) throw new RuntimeException();
+            if (p.exitValue() != 0) throw new RuntimeException(buf.toString());
             r.close();
             String xml = buf.toString();
             return xml;

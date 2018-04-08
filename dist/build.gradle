@@ -1,16 +1,13 @@
-import java.text.SimpleDateFormat
-import java.util.Date
-
 apply plugin: 'application'
 
 mainClassName = 'com.github.gumtreediff.client.Run'
 applicationName = 'gumtree'
 jar.enabled = false
-distZip.archiveName = 'gumtree-' + buildTime() + '-' + version + '.zip'
+distZip.archiveName  = 'gumtree.zip'
 uploadArchives.enabled = false
 distTar.enabled = false
 
-description = 'GumTree whole distribution.'
+description = 'GumTree distribution.'
 
 dependencies {
 	compile project(':client')
@@ -25,6 +22,7 @@ dependencies {
 	compile project(':gen.css')
 	compile project(':gen.jdt')
 	compile project(':gen.js')
+	compile project(':gen.python')
 	compile project(':gen.ruby')
 	compile project(':gen.srcml')
 }
@@ -33,10 +31,4 @@ run {
 	if ( project.hasProperty("params") ) {
 		args Eval.me(params)
 	}
-}
-
-def buildTime() {
-	def df = new SimpleDateFormat("yyyyMMdd")
-	df.setTimeZone(TimeZone.getTimeZone("UTC"))
-	return df.format(new Date())
 }
