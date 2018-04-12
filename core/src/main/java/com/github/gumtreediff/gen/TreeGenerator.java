@@ -31,10 +31,9 @@ import java.nio.file.Paths;
 @IndexSubclasses
 public abstract class TreeGenerator {
 
-    protected String encoding =
-            System.getProperty("gt.encoding.default", "UTF-8");
-
     protected abstract TreeContext generate(Reader r) throws IOException;
+
+    protected String charset = System.getProperty("gt.charset.decoding", "UTF-8");
 
     public TreeContext generateFromReader(Reader r) throws IOException {
         TreeContext ctx = generate(r);
@@ -42,24 +41,24 @@ public abstract class TreeGenerator {
         return ctx;
     }
 
-    public TreeGenerator setEncoding(String encoding) {
-        this.encoding = encoding;
-        return this;
-    }
-
     public TreeContext generateFromFile(String path) throws IOException {
-        return generateFromReader(Files.newBufferedReader(Paths.get(path), Charset.forName(encoding)));
+        return generateFromReader(Files.newBufferedReader(Paths.get(path), Charset.forName(charset)));
     }
 
     public TreeContext generateFromFile(File file) throws IOException {
-        return generateFromReader(Files.newBufferedReader(file.toPath(), Charset.forName(encoding)));
+        return generateFromReader(Files.newBufferedReader(file.toPath(), Charset.forName(charset)));
     }
 
     public TreeContext generateFromStream(InputStream stream) throws IOException {
-        return generateFromReader(new InputStreamReader(stream, encoding));
+        return generateFromReader(new InputStreamReader(stream, charset));
     }
 
     public TreeContext generateFromString(String content) throws IOException {
         return generateFromReader(new StringReader(content));
+    }
+
+    public TreeGenerator setCharset(String charset) {
+        this.charset = charset;
+        return this;
     }
 }

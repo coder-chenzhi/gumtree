@@ -14,55 +14,49 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with GumTree.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2015 Jean-Rémy Falleri <jr.falleri@gmail.com>
- * Copyright 2011-2015 Floréal Morandat <florealm@gmail.com>
+ * Copyright 2018 Jean-Rémy Falleri <jr.falleri@gmail.com>
  */
 
-package com.github.gumtreediff.gen.jdt;
+package com.github.gumtreediff.gen.javaparser;
+
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
+import com.github.gumtreediff.tree.TreeContext;
 import org.junit.Test;
 
 import com.github.gumtreediff.tree.ITree;
-import static org.junit.Assert.*;
 
-public class TestJdtGenerator {
-
+public class TestJavaParserGenerator {
     @Test
     public void testSimpleSyntax() throws IOException {
         String input = "public class Foo { public int foo; }";
-        ITree tree = new JdtTreeGenerator().generateFromString(input).getRoot();
-        assertEquals(15, tree.getType());
-        assertEquals(9, tree.getSize());
+        ITree tree = new JavaParserGenerator().generateFromString(input).getRoot();
+        assertEquals(-1795686804, tree.getType());
+        assertEquals(7, tree.getSize());
     }
 
     @Test
     public void testJava5Syntax() throws IOException {
         String input = "public class Foo<A> { public List<A> foo; public void foo() "
                 + "{ for (A f : foo) { System.out.println(f); } } }";
-        ITree tree = new JdtTreeGenerator().generateFromString(input).getRoot();
-        assertEquals(15, tree.getType());
-        assertEquals(32, tree.getSize());
+        TreeContext context = new JavaParserGenerator().generateFromString(input);
+        ITree tree = context.getRoot();
+
+        System.out.println(tree.toTreeString());
+        assertEquals(-1795686804, tree.getType());
+        assertEquals(34, tree.getSize());
     }
 
     @Test
     public void testJava8Syntax() throws IOException {
         String input = "public class Foo { public void foo(){ new ArrayList<Object>().stream().forEach(a -> {}); } }";
-        ITree tree = new JdtTreeGenerator().generateFromString(input).getRoot();
-        assertEquals(15, tree.getType());
-        assertEquals(24, tree.getSize());
-    }
-
-    @Test
-    public void testJava9Syntax() throws IOException {
-        String input = "module gumtree.test {\n"
-                + "    requires gumtree.req;\n"
-                + "    exports gumtree.test;\n"
-                + "}";
-        ITree tree = new JdtTreeGenerator().generateFromString(input).getRoot();
-        assertEquals(15, tree.getType());
-        assertEquals(1, tree.getSize()); //TODO  JDT does not seems to parse modules?
+        ITree tree = new JavaParserGenerator().generateFromString(input).getRoot();
+        assertEquals(-1795686804, tree.getType());
+        assertEquals(21, tree.getSize());
     }
 
 }
