@@ -31,6 +31,9 @@ import java.nio.file.Paths;
 @IndexSubclasses
 public abstract class TreeGenerator {
 
+    protected String encoding =
+            System.getProperty("gt.encoding.default", "UTF-8");
+
     protected abstract TreeContext generate(Reader r) throws IOException;
 
     public TreeContext generateFromReader(Reader r) throws IOException {
@@ -39,16 +42,21 @@ public abstract class TreeGenerator {
         return ctx;
     }
 
+    public TreeGenerator setEncoding(String encoding) {
+        this.encoding = encoding;
+        return this;
+    }
+
     public TreeContext generateFromFile(String path) throws IOException {
-        return generateFromReader(Files.newBufferedReader(Paths.get(path), Charset.forName("UTF-8")));
+        return generateFromReader(Files.newBufferedReader(Paths.get(path), Charset.forName(encoding)));
     }
 
     public TreeContext generateFromFile(File file) throws IOException {
-        return generateFromReader(Files.newBufferedReader(file.toPath(), Charset.forName("UTF-8")));
+        return generateFromReader(Files.newBufferedReader(file.toPath(), Charset.forName(encoding)));
     }
 
     public TreeContext generateFromStream(InputStream stream) throws IOException {
-        return generateFromReader(new InputStreamReader(stream, "UTF-8"));
+        return generateFromReader(new InputStreamReader(stream, encoding));
     }
 
     public TreeContext generateFromString(String content) throws IOException {

@@ -92,16 +92,7 @@ public class Run {
 
     public static void main(String[] args) {
         Options opts = new Options();
-
-        if(args.length == 0) {
-            args = new String[]{"-c", "gt.bum.smt", "1.0", "-c", "gt.stm.mh", "1", "-c", "webdiff.port", "8090", "webdiff",
-                    "E:\\Code\\GumTreeSpace\\gumtree\\client\\src\\main\\resources\\testdata\\src_big_change\\LinesOfCodeCalculator3.java",
-                    "E:\\Code\\GumTreeSpace\\gumtree\\client\\src\\main\\resources\\testdata\\src_big_change\\LinesOfCodeCalculator4.java"};
-
-        }
-
         args = Option.processCommandLine(args, opts);
-
         initClients();
 
         Registry.Factory<? extends Client> client;
