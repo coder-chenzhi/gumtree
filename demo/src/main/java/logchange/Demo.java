@@ -86,6 +86,12 @@ public class Demo {
             "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_bug\\return\\Return2.java"
     );
 
+    static Revision changeAndMove = new Revision(
+            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\Origin.java",
+            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\ChangeAndMove.java",
+            "修改了日志语句中的一些内容，然后移动日志语句，并不能识别出来，因为GumTree的Move要求语句不发生变化"
+    );
+
     public static void JDTParse(String file1, String file2) {
         ITree src;
         try {
@@ -106,8 +112,8 @@ public class Demo {
     public static void getLogRevision() {
         Run.initGenerators();
 
-        Revision test = twoDeleteAndTwoChange;
-        String charset = "GB2312";
+        Revision test = changeAndMove;
+        String charset = "UTF-8";
         String file1 = test.getSrc();
         String file2 = test.getDst();
         try {
@@ -149,8 +155,8 @@ public class Demo {
             // should get corresponding node in new source, and traverse it to get all addition action
             TreeUtils.visitTree(srcTree, new TreeUtils.TreeVisitor() {
                 boolean insideLogging = false;
-                List<String> actionsList = new ArrayList<>();
-                // 感觉\\b没有必要，\b表示一个单词的边界
+                List<Action> actionsList = new ArrayList<>();
+
                 Pattern p = Pattern.compile(
                         "^\\b(\\S)*log(\\S)*\\.(v|d|i|w|e|info|trace|debug|error|warn|fatal|log)\\(.*\\)",
                         Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
@@ -168,17 +174,43 @@ public class Demo {
                             if (isLoggerPrintMethod(text)) {
                                 insideLogging = true;
                                 if (nodeToAction.containsKey(tree)) {
-                                    actionsList.add(nodeToAction.get(tree).getName());
+                                    actionsList.add(nodeToAction.get(tree));
                                 } else {
-                                    actionsList.add("Same");
+                                    actionsList.add(new Action(null) {
+                                        @Override
+                                        public String getName() {
+                                            return "Same";
+                                        }
+                                        @Override
+                                        public String toString() {
+                                            return "Same";
+                                        }
+                                        @Override
+                                        public String format(TreeContext ctx) {
+                                            return "Same";
+                                        }
+                                    });
                                 }
                             }
                         }
                     } else {
                         if (nodeToAction.containsKey(tree)) {
-                            actionsList.add(nodeToAction.get(tree).getName());
+                            actionsList.add(nodeToAction.get(tree));
                         } else {
-                            actionsList.add("Same");
+                            actionsList.add(new Action(null) {
+                                @Override
+                                public String getName() {
+                                    return "Same";
+                                }
+                                @Override
+                                public String toString() {
+                                    return "Same";
+                                }
+                                @Override
+                                public String format(TreeContext ctx) {
+                                    return "Same";
+                                }
+                            });
                         }
                     }
                 }
@@ -196,7 +228,7 @@ public class Demo {
                                     public void startTree(ITree tree) {
                                         if (nodeToAction.containsKey(tree)) {
                                             if (nodeToAction.get(tree) instanceof Insert) {
-                                                actionsList.add(nodeToAction.get(tree).getName());
+                                                actionsList.add(nodeToAction.get(tree));
                                             } else {
                                                 System.err.println(nodeToAction.get(tree));
                                             }
@@ -210,13 +242,13 @@ public class Demo {
                             insideLogging = false;
                             boolean allSame = true;
                             for (int i = 0; i < actionsList.size(); i ++) {
-                                if (!actionsList.get(0).equals(actionsList.get(i))) {
+                                if (!actionsList.get(0).getName().equals(actionsList.get(i).getName())) {
                                     allSame = false;
                                     break;
                                 }
                             }
                             if (allSame) {
-                                System.out.println(actionsList.get(0) + ":\t" + text);
+                                System.out.println(actionsList.get(0).getName() + ":\t" + text);
                             } else {
                                 System.out.println("UPD:\t" + text);
                             }
@@ -230,7 +262,7 @@ public class Demo {
             TreeUtils.visitTree(dstTree, new TreeUtils.TreeVisitor() {
 
                 boolean insideLogging = false;
-                List<String> actionsList = new ArrayList<>();
+                List<Action> actionsList = new ArrayList<>();
                 // 感觉\\b没有必要，\b表示一个单词的边界
                 Pattern p = Pattern.compile(
                         "^\\b(\\S)*log(\\S)*\\.(v|d|i|w|e|info|trace|debug|error|warn|fatal|log)\\(.*\\)",
@@ -250,24 +282,50 @@ public class Demo {
                                 insideLogging = true;
                                 if (nodeToAction.containsKey(tree)) {
                                     if (nodeToAction.get(tree) instanceof Insert) {
-                                        actionsList.add(nodeToAction.get(tree).getName());
+                                        actionsList.add(nodeToAction.get(tree));
                                     } else {
                                         System.err.println(nodeToAction.get(tree));
                                     }
                                 } else {
-                                    actionsList.add("NoInsert"); // maybe 'same', 'update'
+                                    actionsList.add(new Action(null) {
+                                        @Override
+                                        public String getName() {
+                                            return "NotInsert";
+                                        }
+                                        @Override
+                                        public String toString() {
+                                            return "NotInsert";
+                                        }
+                                        @Override
+                                        public String format(TreeContext ctx) {
+                                            return "NotInsert";
+                                        }
+                                    }); // maybe 'same', 'update'
                                 }
                             }
                         }
                     } else {
                         if (nodeToAction.containsKey(tree)) {
                             if (nodeToAction.get(tree) instanceof Insert) {
-                                actionsList.add(nodeToAction.get(tree).getName());
+                                actionsList.add(nodeToAction.get(tree));
                             } else {
                                 System.err.println(nodeToAction.get(tree));
                             }
                         }  else {
-                            actionsList.add("NoInsert"); // maybe 'same', 'update'
+                            actionsList.add(new Action(null) {
+                                @Override
+                                public String getName() {
+                                    return "NotInsert";
+                                }
+                                @Override
+                                public String toString() {
+                                    return "NotInsert";
+                                }
+                                @Override
+                                public String format(TreeContext ctx) {
+                                    return "NotInsert";
+                                }
+                            }); // maybe 'same', 'update'
                         }
                     }
                 }
@@ -281,13 +339,13 @@ public class Demo {
                             insideLogging = false;
                             boolean allInsert = true;
                             for (int i = 0; i < actionsList.size(); i ++) {
-                                if (!actionsList.get(i).equals("INS")) {
+                                if (!actionsList.get(i).getName().equals(new Insert(null, null, 0).getName())) {
                                     allInsert = false;
                                     break;
                                 }
                             }
                             if (allInsert) {
-                                System.out.println("INS:\t" + text);
+                                System.out.println(new Insert(null, null, 0).getName() + ":\t" + text);
                             }
                             actionsList.clear();
                         }
@@ -304,7 +362,7 @@ public class Demo {
     public static void getProgrammableResult() {
         Run.initGenerators();
 
-        Revision test = addTwoLog;
+        Revision test = changeAndMove;
         String file1 = test.getSrc();
         String file2 = test.getDst();
         try {
@@ -384,10 +442,10 @@ public class Demo {
     }
 
     public static void runClient() {
-        Revision test = twoDeleteAndTwoChange;
+        Revision test = changeAndMove;
         String[] args = new String[]{
 //                "list", "MATCHERS"
-                "-c", "gt.charset.decoding", "GB2312", "webdiff",
+                "-c", "gt.charset.decoding", "UTF-8", "webdiff",
 //                "-m", "change-distiller",
                 test.getSrc(), test.getDst()
         };
@@ -397,7 +455,7 @@ public class Demo {
     public static void main(String[] args) {
 //        getProgrammableResult();
         getLogRevision();
-        runClient();
+//        runClient();
 //        testDiffCluster();
     }
 }
