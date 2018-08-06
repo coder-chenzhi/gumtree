@@ -153,9 +153,7 @@ public class GitProxy {
                     System.out.println(new String(bytes, "utf-8"));
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GitAPIException e) {
+        } catch (IOException | GitAPIException e) {
             e.printStackTrace();
         } finally {
             reader.close();

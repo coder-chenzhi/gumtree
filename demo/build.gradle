@@ -15,4 +15,9 @@ dependencies {
     compile project(':client.diff')
     compile project(':core')
     compile project(':gen.jdt')
+    // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.11.0.201803080745-r'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'
+
 }

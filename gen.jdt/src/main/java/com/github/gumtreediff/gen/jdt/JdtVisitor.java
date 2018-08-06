@@ -34,7 +34,9 @@ public class JdtVisitor  extends AbstractJdtVisitor {
         pushNode(n, getLabel(n));
     }
 
+
     protected String getLabel(ASTNode n) {
+        // 为什么只有这几种？只有这几种不可再细分？
         if (n instanceof Name) return ((Name) n).getFullyQualifiedName();
         if (n instanceof Type) return n.toString();
         if (n instanceof Modifier) return n.toString();

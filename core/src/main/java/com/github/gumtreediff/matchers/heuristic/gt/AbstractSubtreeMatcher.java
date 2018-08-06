@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+// 第一阶段：自顶向下匹配
 public abstract class AbstractSubtreeMatcher extends Matcher {
 
     public static int MIN_HEIGHT = Integer.parseInt(

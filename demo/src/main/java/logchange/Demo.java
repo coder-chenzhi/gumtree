@@ -26,71 +26,105 @@ import org.eclipse.jdt.core.dom.ASTNode;
 
 public class Demo {
 
-    static Revision logChangeWithOtherLargeChurn = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\LinesOfCodeCalculator_7a89641.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\LinesOfCodeCalculator_10a8aa2.java",
-            "the result is not correct by using default parameter"
-    );
+    public static HashMap<String, Revision> data = new HashMap<>();
 
-    static Revision addOneLineOfLog = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_5e92586601.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_745aa91a78.java"
-    );
+    static {
+        data.put("addGuard", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\AddGuard.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\AddGuard2.java",
+                "the result is not correct by using default parameter"
+        ));
 
-    static Revision addTwoLogWithOtherChurn = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_AlipayO2oCreateOrderController_4cdb06ced.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_AlipayO2oCreateOrderController_bdbc36819.java"
-    );
+        data.put("addWrapper", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\AddWrapper.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\AddWrapper2.java",
+                "the result is not correct by using default parameter"
+        ));
+        data.put("logChangeWithOtherLargeChurn", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\LinesOfCodeCalculator_7a89641.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\LinesOfCodeCalculator_10a8aa2.java",
+                "the result is not correct by using default parameter"
+        ));
 
-    static Revision logStaticTextChange = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_CreditLoanAttributeProcessor_3b54451e5.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_CreditLoanAttributeProcessor_12945c1eb.java",
-            "two log statement static text change with other non-log statement change"
-    );
+        data.put("addOneLineOfLog", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_5e92586601.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_745aa91a78.java"
+        ));
 
-    static Revision deleteLogWithOtherChurn = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_JdbcBizOrderDaoForMysqlMainDb_07b566f15.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_JdbcBizOrderDaoForMysqlMainDb_7bf530e50.java",
-            "delete two log statement and some non-log statement, " +
-                    "the result is not correct by using default parameter"
-    );
+        data.put("addTwoLogWithOtherChurn", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_AlipayO2oCreateOrderController_4cdb06ced.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_AlipayO2oCreateOrderController_bdbc36819.java"
+        ));
 
-    static Revision addTwoLog = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_EntranceTracer_615a81e1e.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_EntranceTracer_6e3d7aea3.java"
-    );
+        data.put("logStaticTextChange", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_CreditLoanAttributeProcessor_3b54451e5.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_CreditLoanAttributeProcessor_12945c1eb.java",
+                "two log statement static text change with other non-log statement change"
+        ));
 
-    static Revision twoDeleteAndTwoChange = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_5e92586601.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_745aa91a78.java"
-    );
+        data.put("deleteLogWithOtherChurn", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_JdbcBizOrderDaoForMysqlMainDb_07b566f15.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_JdbcBizOrderDaoForMysqlMainDb_7bf530e50.java",
+                "delete two log statement and some non-log statement, " +
+                        "the result is not correct by using default parameter"
+        ));
 
-    static Revision levelChange = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_MessagePropertyPatch_14b3ed095.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_MessagePropertyPatch_b82d772af.java"
-    );
+        data.put("addTwoLog", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_EntranceTracer_615a81e1e.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_EntranceTracer_6e3d7aea3.java"
+        ));
 
-    static Revision deleteSixLogs = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_MessagePropertyPatch_442e51b59.bak.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_MessagePropertyPatch_e39a2feaa.bak.java",
-            "问题有点大"
-    );
+        data.put("twoDeleteAndTwoChange", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_5e92586601.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_745aa91a78.java",
+                "GB2312"
+        ));
 
-    static Revision deleteOneLog = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_PayCheckResultCodeConvertor_46f6d618e.java.bak",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_PayCheckResultCodeConvertor_cbfb7e486.java.bak"
-    );
+        data.put("levelChange", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_MessagePropertyPatch_14b3ed095.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_MessagePropertyPatch_b82d772af.java"
+        ));
 
-    static Revision returnTest = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_bug\\return\\Return1.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_bug\\return\\Return2.java"
-    );
+        data.put("deleteSixLogs", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_MessagePropertyPatch_442e51b59.bak.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_MessagePropertyPatch_e39a2feaa.bak.java",
+                "Mapping有些问题"
+        ));
 
-    static Revision changeAndMove = new Revision(
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\Origin.java",
-            "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\ChangeAndMove.java",
-            "修改了日志语句中的一些内容，然后移动日志语句，并不能识别出来，因为GumTree的Move要求语句不发生变化"
-    );
+        data.put("deleteOneLog", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_PayCheckResultCodeConvertor_46f6d618e.java.bak",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP3_PayCheckResultCodeConvertor_cbfb7e486.java.bak"
+        ));
+
+        data.put("returnTest", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_bug\\return\\Return1.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_bug\\return\\Return2.java"
+        ));
+
+        data.put("changeAndMove", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\Origin.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\ChangeAndMove.java",
+                "修改了日志语句中的一些内容，然后移动日志语句，并不能识别出来，因为GumTree的Move要求语句不发生变化"
+        ));
+
+        data.put("adjacentAdditon", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\test_cluster\\Simple1.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\test_cluster\\Simple2.java"
+        ));
+
+        data.put("notAdjacentAdditon", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\test_cluster\\Simple1.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\test_cluster\\Simple3.java"
+        ));
+
+        data.put("staticTextChangeAndVarChange", new Revision(
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\Origin.java",
+                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\StaticTextChangeAndVariableChange.java"
+        ));
+
+
+    }
+
 
     public static void JDTParse(String file1, String file2) {
         ITree src;
@@ -112,7 +146,7 @@ public class Demo {
     public static void getLogRevision() {
         Run.initGenerators();
 
-        Revision test = changeAndMove;
+        Revision test = data.get("deleteSixLogs");
         String charset = "UTF-8";
         String file1 = test.getSrc();
         String file2 = test.getDst();
@@ -359,10 +393,10 @@ public class Demo {
     }
 
 
-    public static void getProgrammableResult() {
+    public static void getProgrammableResult(boolean clusterEnable) {
         Run.initGenerators();
 
-        Revision test = changeAndMove;
+        Revision test = data.get("AddWrapper");
         String file1 = test.getSrc();
         String file2 = test.getDst();
         try {
@@ -373,17 +407,21 @@ public class Demo {
             ActionGenerator g = new ActionGenerator(src.getRoot(), dst.getRoot(), m.getMappings());
             g.generate();
             List<Action> actions = g.getActions(); // return the actions
-//            for (Action act : actions) {
-//                System.out.println(act.toString());
-//            }
-            ActionClusterFinder f = new ActionClusterFinder(src, dst, actions);
-            for (Set<Action> cluster : f.getClusters()) {
-                System.out.println("New cluster:");
-                System.out.println(f.getClusterLabel(cluster));
-                System.out.println("------------");
-                for (Action a : cluster)
-                    System.out.println(a.format(src));
-                System.out.println("");
+            if (!clusterEnable) {
+                for (Action act : actions) {
+                    System.out.println(act.toString());
+                }
+            } else {
+                ActionClusterFinder f = new ActionClusterFinder(src, dst, actions);
+                for (Set<Action> cluster : f.getClusters()) {
+                    System.out.println("New cluster:");
+                    System.out.println(f.getClusterLabel(cluster));
+                    System.out.println("------------");
+                    for (Action a : cluster) {
+                        System.out.println(a.format(src));
+                    }
+                    System.out.println("");
+                }
             }
 
         } catch (UnsupportedOperationException | IOException e) {
@@ -392,70 +430,22 @@ public class Demo {
         }
     }
 
-
-    public static void testDiffCluster() {
-        Revision adjacentAdditon = new Revision(
-                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\test_cluster\\Simple1.java",
-                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\test_cluster\\Simple2.java"
-        );
-
-        Revision notAdjacentAdditon = new Revision(
-                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\test_cluster\\Simple1.java",
-                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\test_cluster\\Simple3.java"
-        );
-
-        Revision staticTextChangeAndVarChange = new Revision(
-                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\Origin.java",
-                "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\generated\\StaticTextChangeAndVariableChange.java"
-        );
-
-        Run.initGenerators();
-
-        Revision test = staticTextChangeAndVarChange;
-        String file1 = test.getSrc();
-        String file2 = test.getDst();
-        try {
-            TreeContext src = new JdtTreeGenerator().setCharset("UTF-8").generateFromFile(file1);
-            TreeContext dst = new JdtTreeGenerator().setCharset("UTF-8").generateFromFile(file2);
-            Matcher m = Matchers.getInstance().getMatcher(src.getRoot(), dst.getRoot()); // retrieve the default matcher
-            m.match();
-            ActionGenerator g = new ActionGenerator(src.getRoot(), dst.getRoot(), m.getMappings());
-            g.generate();
-            List<Action> actions = g.getActions(); // return the actions
-//            for (Action act : actions) {
-//                System.out.println(act.toString());
-//            }
-            ActionClusterFinder f = new ActionClusterFinder(src, dst, actions);
-            for (Set<Action> cluster : f.getClusters()) {
-                System.out.println("New cluster:");
-                System.out.println(f.getClusterLabel(cluster));
-                System.out.println("------------");
-                for (Action a : cluster)
-                    System.out.println(a.format(src));
-                System.out.println("");
-            }
-
-        } catch (UnsupportedOperationException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
     public static void runClient() {
-        Revision test = changeAndMove;
+        Revision test = data.get("AddWrapper");
         String[] args = new String[]{
 //                "list", "MATCHERS"
                 "-c", "gt.charset.decoding", "UTF-8", "webdiff",
 //                "-m", "change-distiller",
-                test.getSrc(), test.getDst()
+                test.getDst(), test.getSrc()
         };
         Run.main(args);
     }
 
     public static void main(String[] args) {
-//        getProgrammableResult();
-        getLogRevision();
+        getProgrammableResult(false);
+//        getProgrammableResult(true);
+//        getLogRevision();
 //        runClient();
-//        testDiffCluster();
     }
 }

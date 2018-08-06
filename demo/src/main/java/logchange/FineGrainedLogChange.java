@@ -12,10 +12,8 @@ import com.github.gumtreediff.tree.ITree;
 import com.github.gumtreediff.tree.TreeContext;
 import com.github.gumtreediff.tree.TreeUtils;
 import org.eclipse.jdt.core.dom.ASTNode;
+import util.StringUtil;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Created by chenzhi on 2018/4/16.
  */
-public class FineLevelLogChange {
+public class FineGrainedLogChange {
 
     class SameAction extends Action{
 
@@ -66,7 +64,7 @@ public class FineLevelLogChange {
         }
     }
 
-    Pattern p = Pattern.compile(
+    private Pattern p = Pattern.compile(
             "^\\b(\\S)*log(\\S)*\\.(v|d|i|w|e|info|trace|debug|error|warn|fatal|log)\\(.*\\)",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
@@ -75,13 +73,24 @@ public class FineLevelLogChange {
         return m.matches();
     }
 
-    private String fileToString(String filePath, String[] charsets) {
-        return "";
+    /**
+     * 判断是否是独立的日志修改
+     * 判断逻辑会很复杂
+     * 独立日志增加：所在代码块不是整体增加，或者连续的几条语句（前后皆可）不是整体增加
+     * 独立日志删除：所在代码块不是整体删除，或者连续的几条语句（前后皆可）不是整体删除
+     * 独立日志修改：日志语句中的修改，不会在其他代码块中的修改中找到
+     * @return
+     */
+    public boolean isIndependentChange() {
+        return true;
     }
 
     public void getLogRevision(String srcText, String dstText) {
         Run.initGenerators();
-
+        if (srcText == null | dstText == null) {
+            System.out.println("source should not be null");
+            return;
+        }
         try {
             TreeContext src = new JdtTreeGenerator().generateFromString(srcText);
             TreeContext dst = new JdtTreeGenerator().generateFromString(dstText);
@@ -252,6 +261,14 @@ public class FineLevelLogChange {
         }
     }
 
+    public static void main(String[] args) {
+        String path1 = "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_5e92586601.java";
+        String path2 = "E:\\Code\\GumTreeSpace\\gumtree\\test_data\\src_log_change\\TP_CommonPushCreditLoanTradeStatusStoreSpi_745aa91a78.java";
 
+        String src = StringUtil.fileToString(path1);
+        String dst = StringUtil.fileToString(path2);
+
+        new FineGrainedLogChange().getLogRevision(src, dst);
+    }
 
 }

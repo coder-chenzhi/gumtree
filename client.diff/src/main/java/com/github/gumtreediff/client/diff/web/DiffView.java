@@ -54,6 +54,13 @@ public class DiffView implements Renderable {
         diffs.produce();
     }
 
+    public DiffView(File fSrc, File fDst, TreeContext src, TreeContext dst, Matcher matcher) throws IOException {
+        this.fSrc = fSrc;
+        this.fDst = fDst;
+        diffs = new HtmlDiffs(fSrc, fDst, src, dst, matcher);
+        diffs.produce();
+    }
+
     @Override
     public void renderOn(HtmlCanvas html) throws IOException {
         html

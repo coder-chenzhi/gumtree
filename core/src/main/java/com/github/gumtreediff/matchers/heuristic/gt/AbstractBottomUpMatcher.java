@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// 第二阶段，自底向上匹配
 public abstract class AbstractBottomUpMatcher extends Matcher {
     //TODO make final?
     public static int SIZE_THRESHOLD =
