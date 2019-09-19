@@ -1,4 +1,4 @@
-package logchange;
+package edu.zju.log.change;
 
 import com.github.gumtreediff.actions.ActionGenerator;
 import com.github.gumtreediff.actions.model.Action;
@@ -12,7 +12,7 @@ import com.github.gumtreediff.tree.ITree;
 import com.github.gumtreediff.tree.TreeContext;
 import com.github.gumtreediff.tree.TreeUtils;
 import org.eclipse.jdt.core.dom.ASTNode;
-import util.StringUtil;
+import edu.zju.log.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

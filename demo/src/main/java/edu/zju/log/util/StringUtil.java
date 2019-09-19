@@ -1,4 +1,4 @@
-package util;
+package edu.zju.log.util;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;

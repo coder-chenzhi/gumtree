@@ -1,4 +1,4 @@
-package logchange;
+package edu.zju.log.change;
 
 import java.io.File;
 import java.io.IOException;

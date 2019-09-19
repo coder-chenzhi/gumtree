@@ -1,4 +1,4 @@
-package logchange;
+package edu.zju.log.change;
 
 /**
  * Created by chenzhi on 2018/4/12.
